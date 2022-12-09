@@ -1,7 +1,7 @@
 import express from "express";
 import cors from 'cors';
-import { connection } from "./database/db.js";
 import dotenv from 'dotenv';
+import categoriesRouter from './routes/categories.route.js'
 
 dotenv.config()
 const app = express()
@@ -9,11 +9,7 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-app.get('/produtos', async (req,res)=>{
-    const produtos = await connection.query("SELECT * FROM produtos")
-
-    res.send(produtos.rows)
-})
+app.use(categoriesRouter)
 
 const port = process.env.PORT || 4000;
 
