@@ -23,8 +23,6 @@ export async function getCustomers(req, res){
     }
 }
 
-
-
 export async function getCustomersById(req,res){
 
     const {id} = req.params
@@ -45,4 +43,9 @@ export async function getCustomersById(req,res){
         console.log(error)
         res.sendStatus(500)
     }
+}
+
+export async function postCustomers(req,res){
+
+    
 }
