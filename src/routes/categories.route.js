@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { getCategories, postCategories } from "../controllers/categories.controllers.js";
-import { validatePostNameCategorieMiddleware } from "../middlewares/validatePostNameCategorie.middleware.js";
+import { validatePostNameCategoryMiddleware } from "../middlewares/validatePostNameCategory.middleware.js";
 
 const router = Router()
 
 router.get('/categories', getCategories)
 
-router.post('/categories',validatePostNameCategorieMiddleware, postCategories)
+router.post('/categories',validatePostNameCategoryMiddleware, postCategories)
 
 
 

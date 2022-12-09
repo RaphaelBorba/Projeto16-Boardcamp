@@ -1,7 +1,7 @@
 import { connection } from "../database/db.js"
 
 
-export async function validatePostNameCategorieMiddleware(req, res, next){
+export async function validatePostNameCategoryMiddleware(req, res, next){
 
     const {name} = req.body
 
