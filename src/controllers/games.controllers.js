@@ -13,9 +13,9 @@ export async function getGames(req, res) {
             return res.send(games.rows).status(200);
         }
 
-        const games = await connection.query(`SELECT games.*, categories.name AS category_name 
+        const games = await connection.query(`SELECT games.*, categories.name AS "categoryName" 
                                                 FROM games 
-                                                JOIN categories ON category_id=categories.id`)
+                                                JOIN categories ON "categoryId"=categories.id`)
 
         res.send(games.rows).status(200)
 
@@ -31,7 +31,7 @@ export async function postGames(req, res) {
 
     try {
 
-        await connection.query('INSERT INTO games(name, image, stock_total, category_id, price_per_day) VALUES ($1,$2,$3,$4,$5);',
+        await connection.query('INSERT INTO games(name, image, "stockTotal", "categoryId", "pricePerDay") VALUES ($1,$2,$3,$4,$5);',
             [name, image, stockTotal, categoryId, pricePerDay])
 
         res.sendStatus(200)
