@@ -19,8 +19,6 @@ export async function validatePostGame(req, res, next){
 
     const idcategory = await connection.query("SELECT * FROM categories WHERE id = $1", [categoryId])
 
-    console.log(idcategory.rows[0]);
-
     if(!idcategory.rows[0]){
         
         return res.status(400).send('Categoria não encontrada')
