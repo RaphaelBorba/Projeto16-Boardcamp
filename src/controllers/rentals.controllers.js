@@ -5,10 +5,6 @@ export async function getRentals(req, res) {
     const { customerId } = req.query
     const { gameId } = req.query
 
-    console.log(req.query)
-
-
-
     try {
 
         if (customerId && gameId) {
@@ -32,12 +28,12 @@ export async function getRentals(req, res) {
 
         } else {
 
-            const rentals = await connection.query('SELECT * FROM rentals;')
+            const rentals = await connection.query(`SELECT * FROM rentals
+             JOIN customers ON rentals."customerId" = customers."id"
+             JOIN games ON rentals."gameId" = games."id";`)
 
             res.status(200).send(rentals.rows)
         }
-
-
 
     } catch (error) {
         console.log(error)
