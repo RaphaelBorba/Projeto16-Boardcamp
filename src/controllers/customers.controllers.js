@@ -62,3 +62,28 @@ export async function postCustomers(req,res){
     }
 
 }
+
+export async function putCustomers(req, res){
+
+    const body = req.body
+
+    const {id} = req.params
+
+    const user = await connection.query('SELECT * FROM customers WHERE id=$1;', [id])
+
+    if(!user){
+        return res.sendStatus(404)
+    }
+
+    try {
+        await connection.query('UPDATE customers SET cpf=$1, name=$2, phone=$3, birthday=$4 WHERE id = $5;',
+         [body.cpf, body.name, body.phone, body.birthday, id])
+
+         res.sendStatus(200)
+
+    } catch (error) {
+        console.log(error)
+        res.sendStatus(500)
+    }
+
+}

@@ -11,6 +11,8 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
+/* FALTA FAZER O UPDATE DE CUSTOMERS */
+
 app.use(categoriesRouter)
 app.use(gamesRouter)
 app.use(customersRouter)

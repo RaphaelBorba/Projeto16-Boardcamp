@@ -1,11 +1,11 @@
-import { custumerSchema } from "../models/customers.model.js";
+import { customerSchema } from "../models/customers.model.js";
 import { connection } from "../database/db.js";
 
 export async function validatePostCustomer(req, res, next){
 
     const body = req.body
 
-    const validation = custumerSchema.validate(body, {abortEarly:false})
+    const validation = customerSchema.validate(body, {abortEarly:false})
 
     if(validation.error){
 
