@@ -36,7 +36,7 @@ export async function getCustomersById(req,res){
             return res.sendStatus(404)
         }
 
-        res.status(200).send(userId);
+        res.status(200).send(userId.rows[0]);
         
 
     } catch (error) {
@@ -47,5 +47,18 @@ export async function getCustomersById(req,res){
 
 export async function postCustomers(req,res){
 
-    
+    const body = req.body
+
+    try {
+
+        await connection.query('INSERT INTO customers(name, cpf, birthday, phone) VALUES ($1,$2,$3,$4);',
+         [body.name, body.cpf, body.birthday, body.phone])
+
+         res.sendStatus(201)
+        
+    } catch (error) {
+        console.log(error)
+        res.sendStatus(500)
+    }
+
 }
