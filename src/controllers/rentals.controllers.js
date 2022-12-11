@@ -20,7 +20,7 @@ export async function getRentals(req, res) {
 
             res.status(200).send(custumer.rows)
 
-        }else if(gameId){
+        } else if (gameId) {
 
             const game = await connection.query('SELECT * FROM rentals WHERE "gameId" = $1;', [gameId]);
 
@@ -39,4 +39,10 @@ export async function getRentals(req, res) {
         console.log(error)
         res.sendStatus(500)
     }
+}
+
+export async function postRentals(req, res) {
+
+
+    res.send('ok');
 }
