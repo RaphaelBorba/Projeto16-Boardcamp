@@ -9,28 +9,54 @@ export async function getRentals(req, res) {
 
         if (customerId && gameId) {
 
-            const game_customerID = await connection.query('SELECT * FROM rentals WHERE "customerId" = $1 AND "gameId" = $2;',
+            const game_customerID = await connection.query(`SELECT rentals.*, 
+            JSON_BUILD_OBJECT('id', games.id, 'name' , games.name, 'categoryId', games."categoryId", 'categoryName', categories."name")AS "game",
+            JSON_BUILD_OBJECT('id', customers.id, 'name', customers.name) AS customer
+            FROM rentals
+            JOIN games ON rentals."gameId"=games.id
+            JOIN categories ON games."categoryId" = categories.id
+            JOIN customers ON rentals."customerId" = customers.id
+            WHERE "customerId" = $1 AND "gameId" = $2;`,
                 [customerId, gameId]);
 
             res.status(200).send(game_customerID.rows);
 
         } else if (customerId) {
 
-            const custumer = await connection.query('SELECT * FROM rentals WHERE "customerId" = $1;', [customerId]);
+            const custumer = await connection.query(`SELECT rentals.*, 
+            JSON_BUILD_OBJECT('id', games.id, 'name' , games.name, 'categoryId', games."categoryId", 'categoryName', categories."name")AS "game",
+            JSON_BUILD_OBJECT('id', customers.id, 'name', customers.name) AS customer
+            FROM rentals
+            JOIN games ON rentals."gameId"=games.id
+            JOIN categories ON games."categoryId" = categories.id
+            JOIN customers ON rentals."customerId" = customers.id
+            WHERE "customerId" = $1;`, [customerId]);
 
             res.status(200).send(custumer.rows)
 
         } else if (gameId) {
 
-            const game = await connection.query('SELECT * FROM rentals WHERE "gameId" = $1;', [gameId]);
+            const game = await connection.query(`SELECT rentals.*, 
+            JSON_BUILD_OBJECT('id', games.id, 'name' , games.name, 'categoryId', games."categoryId", 'categoryName', categories."name")AS "game",
+            JSON_BUILD_OBJECT('id', customers.id, 'name', customers.name) AS customer
+            FROM rentals
+            JOIN games ON rentals."gameId"=games.id
+            JOIN categories ON games."categoryId" = categories.id
+            JOIN customers ON rentals."customerId" = customers.id
+            WHERE "gameId" = $1;`, [gameId]);
 
             res.status(200).send(game.rows)
 
         } else {
 
-            const rentals = await connection.query(`SELECT * FROM rentals
-             JOIN customers ON rentals."customerId" = customers."id"
-             JOIN games ON rentals."gameId" = games."id";`)
+            const rentals = await connection.query(`SELECT rentals.*, 
+            JSON_BUILD_OBJECT('id', games.id, 'name' , games.name, 'categoryId', games."categoryId", 'categoryName', categories."name")AS "game",
+            JSON_BUILD_OBJECT('id', customers.id, 'name', customers.name) AS customer
+            FROM rentals
+            JOIN games ON rentals."gameId"=games.id
+            JOIN categories ON games."categoryId" = categories.id
+            JOIN customers ON rentals."customerId" = customers.id
+            ;`)
 
             res.status(200).send(rentals.rows)
         }
@@ -60,3 +86,9 @@ export async function postRentals(req, res) {
         res.sendStatus(500)
     }
 }
+
+/* SELECT rentals.*, JSON_BUILD_OBJECT('game', games) FROM rentals JOIN games ON rentals.id=games.id; */
+
+/* `SELECT * FROM rentals
+             JOIN customers ON rentals."customerId" = customers."id"
+             JOIN games ON rentals."gameId" = games."id";` */
