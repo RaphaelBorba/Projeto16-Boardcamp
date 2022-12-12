@@ -40,3 +40,36 @@ export async function addPostInfos(req, res, next) {
 
     next()
 }
+
+export async function handleReturnDate(req, res, next){
+
+    const idRental = req.params.id
+
+    const rental = await connection.query(`SELECT * FROM rentals 
+            JOIN games ON rentals."gameId" = games.id WHERE rentals.id = $1`, 
+            [idRental])
+
+    if(!rental.rows[0]){
+        return res.sendStatus(404)
+    }
+
+    if(rental.rows[0].returnDate){
+        return res.sendStatus(400)
+    }
+
+    const rentDate = rental.rows[0].rentDate
+
+    const date = new Date()
+
+    const diffTime = Math.abs(date - rentDate);
+
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+
+    const fine = rental.rows[0].pricePerDay * diffDays
+
+    res.locals.date = date
+
+    res.locals.fine = fine
+
+    next()
+}

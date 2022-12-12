@@ -87,8 +87,22 @@ export async function postRentals(req, res) {
     }
 }
 
-/* SELECT rentals.*, JSON_BUILD_OBJECT('game', games) FROM rentals JOIN games ON rentals.id=games.id; */
+export async function postReturnDate(req, res){
 
-/* `SELECT * FROM rentals
-             JOIN customers ON rentals."customerId" = customers."id"
-             JOIN games ON rentals."gameId" = games."id";` */
+    const date = res.locals.date
+
+    const fine = res.locals.fine
+
+    const {id} = req.params
+    
+    try {
+        
+        await connection.query(`UPDATE rentals SET "returnDate" = $1, "delayFee" = $2 WHERE id = $3;`, [date, fine, id])
+
+        res.sendStatus(200)
+
+    } catch (error) {
+        console.log(error)
+        res.send(500)
+    }
+}
