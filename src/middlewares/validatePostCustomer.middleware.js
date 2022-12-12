@@ -4,6 +4,8 @@ import { connection } from "../database/db.js";
 export async function validatePostCustomer(req, res, next){
 
     const body = req.body
+    
+    const {id} = req.params
 
     const validation = customerSchema.validate(body, {abortEarly:false})
 
@@ -12,12 +14,12 @@ export async function validatePostCustomer(req, res, next){
         return res.status(400).send(validation.error.message)
     }
 
-    const existCustomer = await connection.query('SELECT * FROM customers WHERE cpf=$1', [body.cpf])
+    const user = await connection.query('SELECT * FROM customers WHERE id=$1;', [id])
 
-    if(existCustomer.rows[0]){
-
-        return res.status(409).send('CPF já registrado!')
+    if(!user){
+        return res.sendStatus(404)
     }
+
 
     next()
 }
