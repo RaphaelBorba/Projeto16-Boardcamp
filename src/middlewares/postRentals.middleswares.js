@@ -45,6 +45,8 @@ export async function handleReturnDate(req, res, next){
 
     const idRental = req.params.id
 
+    let fine = 0
+
     const rental = await connection.query(`SELECT * FROM rentals 
             JOIN games ON rentals."gameId" = games.id WHERE rentals.id = $1`, 
             [idRental])
@@ -63,13 +65,33 @@ export async function handleReturnDate(req, res, next){
 
     const diffTime = Math.abs(date - rentDate);
 
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-    const fine = rental.rows[0].pricePerDay * diffDays
+    if(diffDays>rental.rows[0].daysRented){
+
+        fine = rental.rows[0].pricePerDay * (diffDays-rental.rows[0].daysRented)
+    }
+
 
     res.locals.date = date
 
     res.locals.fine = fine
+
+    next()
+}
+
+export async function validateId(req, res, next){
+    const {id} = req.params
+
+    const rental = await connection.query(`SELECT * FROM rentals WHERE id=$1;`, [id])
+
+    if(!rental.rows[0]){
+        return res.sendStatus(404)
+    }
+
+    if(!rental.rows[0].returnDate){
+        return res.sendStatus(400)
+    }
 
     next()
 }

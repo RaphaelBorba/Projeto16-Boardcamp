@@ -94,7 +94,7 @@ export async function postReturnDate(req, res){
     const fine = res.locals.fine
 
     const {id} = req.params
-    
+
     try {
         
         await connection.query(`UPDATE rentals SET "returnDate" = $1, "delayFee" = $2 WHERE id = $3;`, [date, fine, id])
@@ -104,5 +104,19 @@ export async function postReturnDate(req, res){
     } catch (error) {
         console.log(error)
         res.send(500)
+    }
+}
+
+export async function deleteRental(req, res){
+
+    const {id} = req.params
+
+    try {
+        
+        await connection.query(`DELETE FROM rentals WHERE id=$1;`, [id])
+        
+    } catch (error) {
+        console.log(error)
+        res.sendStatus(500)
     }
 }
